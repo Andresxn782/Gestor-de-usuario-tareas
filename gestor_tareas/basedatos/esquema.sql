@@ -50,3 +50,10 @@ CREATE TABLE usuario_tarea (
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),   -- Relación con tabla usuarios
     FOREIGN KEY (id_tarea) REFERENCES tareas(id_tarea)          -- Relación con tabla tareas
 );
+
+
+-- Creamos usuario y le otorgamos privilegios
+CREATE USER 'gestor_user'@'localhost' IDENTIFIED BY '1234';
+GRANT ALL PRIVILEGES ON gestortareas.* TO 'gestor_user'@'localhost';
+FLUSH PRIVILEGES;
+
