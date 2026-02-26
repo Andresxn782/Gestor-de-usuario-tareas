@@ -1,30 +1,76 @@
-<!DOCTYPE html>
+<!doctype html>
+<!-- Indica que el documento es HTML5 -->
+
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Idioma del documento: español -->
+
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Permite usar caracteres especiales como tildes y ñ -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Hace que la página sea responsive (adaptable a móviles) -->
+
     <title>Login - TaskMaster Pro</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
+    <!-- Título que aparece en la pestaña del navegador -->
+
+    <!-- Enlace al archivo CSS ubicado en la carpeta static/css -->
+    <!-- url_for('static', filename='...') es una función de Flask -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+
+    <!-- Importamos la fuente Poppins desde Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!-- Contenedor principal del formulario -->
     <div class="form-container">
-        <!-- Nombre de la empresa -->
-        <div class="form-title">TaskMaster <span class="pro">Pro</span></div>
+      <!-- Nombre de la empresa -->
+      <div class="form-title">
+        TaskMaster <span class="pro">Pro</span>
+        <!-- El span permite dar estilo diferente a la palabra "Pro" -->
+      </div>
 
-        {% if message %}
-        <div class="message {{ 'error' if error else 'success' }}">
-            {{ message }}
-        </div>
-        {% endif %}
+      <!-- Bloque condicional de Jinja2 (motor de plantillas de Flask) -->
+      <!-- Solo se muestra si existe la variable "message" -->
+      {% if message %}
 
-        <form method="POST">
-            <input type="email" name="email" placeholder="Correo electrónico" required>
-            <input type="password" name="password" placeholder="Contraseña" required>
-            <button type="submit">Iniciar Sesión</button>
-        </form>
+      <!-- Clase dinámica:
+             - Si error es True → clase "error"
+             - Si error es False → clase "success"
+        -->
+      <div class="message {{ 'error' if error else 'success' }}">
+        {{ message }}
+        <!-- Aquí se muestra el mensaje enviado desde Flask -->
+      </div>
 
-        <p>¿No tienes cuenta? <a href="{{ url_for('register') }}">Regístrate aquí</a></p>
+      {% endif %}
+      <!-- Fin del bloque condicional -->
+
+      <!-- Formulario que enviará datos al servidor -->
+      <!-- method="POST" indica que enviará datos de forma segura -->
+      <form method="POST">
+        <!-- Campo para introducir el email -->
+        <!-- type="email" valida formato automáticamente -->
+        <input type="email" name="email" placeholder="Correo electrónico" required />
+
+        <!-- Campo para contraseña -->
+        <!-- type="password" oculta los caracteres -->
+        <input type="password" name="password" placeholder="Contraseña" required />
+
+        <!-- Botón para enviar el formulario -->
+        <button type="submit">Iniciar Sesión</button>
+      </form>
+
+      <!-- Enlace para ir a la página de registro -->
+      <!-- url_for('register') redirige a la ruta definida en Flask -->
+      <p>
+        ¿No tienes cuenta?
+        <a href="{{ url_for('register') }}">Regístrate aquí</a>
+      </p>
     </div>
-</body>
+  </body>
 </html>

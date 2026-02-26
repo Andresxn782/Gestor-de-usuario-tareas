@@ -1,46 +1,134 @@
-<!DOCTYPE html>
+<!doctype html>
+<!-- Indica que el documento es HTML5 -->
+
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Trabajador - TaskMaster <span style="color:#f4c542;">Pro</span></title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
+  <!-- Idioma del documento: español -->
+
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Permite mostrar correctamente caracteres especiales -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Hace que la página sea responsive (adaptable a móviles) -->
+
+    <title>Panel Trabajador - TaskMaster Pro</title>
+    <!-- Título que aparece en la pestaña del navegador -->
+    <!-- ⚠️ Dentro de <title> no se pueden usar etiquetas HTML como <span> -->
+
+    <!-- Enlace al archivo CSS -->
+    <!-- url_for('static', filename='...') genera la ruta correctamente en Flask -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+
+    <!-- Importamos la fuente Poppins desde Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!-- Contenedor principal del panel -->
     <div class="panel-container">
-        <h1>Bienvenido, {{ nombre }}</h1>
-        <h2>Mis Tareas</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Tarea</th>
-                    <th>Descripción</th>
-                    <th>Estado</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for tarea in tareas %}
-                <tr>
-                    <td>{{ tarea.id_tarea }}</td>
-                    <td>{{ tarea.nombre }}</td>
-                    <td>{{ tarea.descripcion }}</td>
-                    <td>
-                        <form method="POST" action="/update_tarea">
-                            <input type="hidden" name="id_tarea" value="{{ tarea.id_tarea }}">
-                            <select name="estado" onchange="this.form.submit()">
-                                <option value="pendiente" {% if tarea.estado=='pendiente' %}selected{% endif %}>Pendiente</option>
-                                <option value="en_proceso" {% if tarea.estado=='en_proceso' %}selected{% endif %}>En proceso</option>
-                                <option value="finalizada" {% if tarea.estado=='finalizada' %}selected{% endif %}>Finalizada</option>
-                            </select>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <a href="{{ url_for('login') }}" class="btn-logout">Cerrar sesión</a>
+      <!-- Mensaje de bienvenida -->
+      <!-- {{ nombre }} es una variable enviada desde Flask -->
+      <h1>Bienvenido, {{ nombre }}</h1>
+
+      <!-- Subtítulo -->
+      <h2>Mis Tareas</h2>
+
+      <!-- Tabla que muestra las tareas asignadas -->
+      <table>
+        <!-- Encabezado de la tabla -->
+        <thead>
+          <tr>
+            <th>ID</th>
+            <!-- ID de la tarea -->
+            <th>Tarea</th>
+            <!-- Nombre de la tarea -->
+            <th>Descripción</th>
+            <!-- Descripción de la tarea -->
+            <th>Estado</th>
+            <!-- Estado actual -->
+          </tr>
+        </thead>
+
+        <!-- Cuerpo de la tabla -->
+        <tbody>
+          <!-- Bucle de Jinja2 -->
+          <!-- Recorre la lista "tareas" enviada desde Flask -->
+          {% for tarea in tareas %}
+
+          <tr>
+            <!-- Mostramos los datos de cada tarea -->
+            <td>{{ tarea.id_tarea }}</td>
+            <td>{{ tarea.nombre }}</td>
+            <td>{{ tarea.descripcion }}</td>
+
+            <td>
+              <!-- Formulario para actualizar el estado de la tarea -->
+              <!-- Se envía por POST a la ruta /update_tarea -->
+              <form method="POST" action="/update_tarea">
+                <!-- Campo oculto que envía el ID de la tarea -->
+                <input type="hidden" name="id_tarea" value="{{ tarea.id_tarea }}" />
+
+                <!-- Selector desplegable para cambiar el estado -->
+                <!-- onchange="this.form.submit()" envía automáticamente el formulario al cambiar opción -->
+                <select name="estado" onchange="this.form.submit()">
+                  <!-- Opción Pendiente -->
+                  <!-- Si el estado actual es "pendiente", se marca como seleccionada -->
+                  <option
+                    value="pendiente"
+                    {%
+                    if
+                    tarea.estado=""
+                    ="pendiente"
+                    %}selected{%
+                    endif
+                    %}
+                  >
+                    Pendiente
+                  </option>
+
+                  <!-- Opción En proceso -->
+                  <option
+                    value="en_proceso"
+                    {%
+                    if
+                    tarea.estado=""
+                    ="en_proceso"
+                    %}selected{%
+                    endif
+                    %}
+                  >
+                    En proceso
+                  </option>
+
+                  <!-- Opción Finalizada -->
+                  <option
+                    value="finalizada"
+                    {%
+                    if
+                    tarea.estado=""
+                    ="finalizada"
+                    %}selected{%
+                    endif
+                    %}
+                  >
+                    Finalizada
+                  </option>
+                </select>
+              </form>
+            </td>
+          </tr>
+
+          {% endfor %}
+          <!-- Fin del bucle -->
+        </tbody>
+      </table>
+
+      <!-- Botón para cerrar sesión -->
+      <!-- Redirige a la ruta login -->
+      <a href="{{ url_for('login') }}" class="btn-logout"> Cerrar sesión </a>
     </div>
-</body>
+  </body>
 </html>

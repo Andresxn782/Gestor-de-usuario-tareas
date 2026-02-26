@@ -1,35 +1,90 @@
-<!DOCTYPE html>
+<!doctype html>
+<!-- Indica que el documento es HTML5 -->
+
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Idioma principal del documento -->
+
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Permite usar correctamente caracteres especiales (tildes, ñ, etc.) -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Hace que la página sea responsive (adaptable a móviles) -->
+
     <title>Registro - TaskMaster Pro</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
+    <!-- Título que aparece en la pestaña del navegador -->
+
+    <!-- Enlace al archivo CSS desde la carpeta static -->
+    <!-- url_for('static', filename='...') genera la ruta correctamente en Flask -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+
+    <!-- Importación de la fuente Poppins desde Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!-- Contenedor principal del formulario -->
     <div class="form-container">
-        <!-- Nombre de la empresa como logo -->
-        <div class="form-title">TaskMaster <span class="pro">Pro</span></div>
+      <!-- Nombre de la empresa (simula un logo visual) -->
+      <div class="form-title">
+        TaskMaster <span class="pro">Pro</span>
+        <!-- El span permite aplicar estilo distinto a "Pro" -->
+      </div>
 
-        {% if message %}
-        <div class="message {{ 'error' if error else 'success' }}">
-            {{ message }}
-        </div>
-        {% endif %}
+      <!-- Bloque condicional de Jinja2 -->
+      <!-- Solo se muestra si existe la variable "message" enviada desde Flask -->
+      {% if message %}
 
-        <form method="POST">
-            <input type="text" name="nombre" placeholder="Nombre completo" required>
-            <input type="email" name="email" placeholder="Correo electrónico" required>
-            <input type="password" name="password" placeholder="Contraseña" required>
-            <select name="rol" required>
-                <option value="trabajador" selected>Trabajador</option>
-                <option value="administrador">Administrador</option>
-            </select>
-            <button type="submit">Registrarse</button>
-        </form>
+      <!-- Clase dinámica:
+             - Si error es True → aplica clase "error"
+             - Si error es False → aplica clase "success"
+        -->
+      <div class="message {{ 'error' if error else 'success' }}">
+        {{ message }}
+        <!-- Aquí se muestra el mensaje (ej: "El correo ya está registrado") -->
+      </div>
 
-        <p>¿Ya tienes cuenta? <a href="{{ url_for('login') }}">Inicia sesión aquí</a></p>
+      {% endif %}
+      <!-- Fin del bloque condicional -->
+
+      <!-- Formulario que enviará los datos al servidor -->
+      <!-- method="POST" envía datos al backend de forma segura -->
+      <form method="POST">
+        <!-- Campo para el nombre completo -->
+        <input type="text" name="nombre" placeholder="Nombre completo" required />
+        <!-- required obliga a completar el campo -->
+
+        <!-- Campo para el correo electrónico -->
+        <input type="email" name="email" placeholder="Correo electrónico" required />
+        <!-- type="email" valida automáticamente el formato -->
+
+        <!-- Campo para la contraseña -->
+        <input type="password" name="password" placeholder="Contraseña" required />
+        <!-- type="password" oculta los caracteres -->
+
+        <!-- Selector para elegir el rol -->
+        <select name="rol" required>
+          <!-- Opción por defecto -->
+          <option value="trabajador" selected>Trabajador</option>
+
+          <!-- Opción administrador -->
+          <option value="administrador">Administrador</option>
+        </select>
+        <!-- required obliga a seleccionar una opción -->
+
+        <!-- Botón para enviar el formulario -->
+        <button type="submit">Registrarse</button>
+      </form>
+
+      <!-- Enlace para ir al login -->
+      <!-- url_for('login') llama a la ruta definida en Flask -->
+      <p>
+        ¿Ya tienes cuenta?
+        <a href="{{ url_for('login') }}"> Inicia sesión aquí </a>
+      </p>
     </div>
-</body>
+  </body>
 </html>

@@ -1,37 +1,82 @@
-<!DOCTYPE html>
+<!doctype html>
+<!-- Indica que el documento es HTML5 -->
+
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Administrador - TaskMaster <span style="color:#f4c542;">Pro</span></title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
+  <!-- Idioma del documento: español -->
+
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Permite mostrar correctamente caracteres especiales -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Hace que la página sea responsive (adaptable a móviles) -->
+
+    <title>Panel Administrador - TaskMaster Pro</title>
+    <!-- Título que aparece en la pestaña del navegador -->
+    <!-- ⚠️ Nota: dentro de <title> no se pueden usar etiquetas HTML como <span> -->
+
+    <!-- Enlace al archivo CSS ubicado en la carpeta static/css -->
+    <!-- url_for('static', filename='...') es una función de Flask -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+
+    <!-- Importamos la fuente Poppins desde Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <!-- Contenedor principal del panel -->
     <div class="panel-container">
-        <h1>Bienvenido, {{ nombre }}</h1>
-        <h2>Lista de Trabajadores</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>Rol</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for usuario in usuarios %}
-                <tr>
-                    <td>{{ usuario.id_usuario }}</td>
-                    <td>{{ usuario.nombre }}</td>
-                    <td>{{ usuario.email }}</td>
-                    <td>{{ usuario.rol }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <a href="{{ url_for('login') }}" class="btn-logout">Cerrar sesión</a>
+      <!-- Título de bienvenida -->
+      <!-- {{ nombre }} es una variable enviada desde Flask -->
+      <h1>Bienvenido, {{ nombre }}</h1>
+
+      <!-- Subtítulo -->
+      <h2>Lista de Trabajadores</h2>
+
+      <!-- Tabla para mostrar los trabajadores -->
+      <table>
+        <!-- Encabezado de la tabla -->
+        <thead>
+          <tr>
+            <th>ID</th>
+            <!-- Identificador del usuario -->
+
+            <th>Nombre</th>
+            <!-- Nombre del trabajador -->
+
+            <th>Email</th>
+            <!-- Correo electrónico -->
+
+            <th>Rol</th>
+            <!-- Rol (en este caso debería ser "trabajador") -->
+          </tr>
+        </thead>
+
+        <!-- Cuerpo de la tabla -->
+        <tbody>
+          <!-- Bucle de Jinja2 -->
+          <!-- Recorre la lista "usuarios" enviada desde Flask -->
+          {% for usuario in usuarios %}
+
+          <tr>
+            <!-- Mostramos los datos de cada usuario -->
+            <td>{{ usuario.id_usuario }}</td>
+            <td>{{ usuario.nombre }}</td>
+            <td>{{ usuario.email }}</td>
+            <td>{{ usuario.rol }}</td>
+          </tr>
+
+          {% endfor %}
+          <!-- Fin del bucle -->
+        </tbody>
+      </table>
+
+      <!-- Botón para cerrar sesión -->
+      <!-- Redirige a la ruta "login" definida en Flask -->
+      <a href="{{ url_for('login') }}" class="btn-logout"> Cerrar sesión </a>
     </div>
-</body>
+  </body>
 </html>
