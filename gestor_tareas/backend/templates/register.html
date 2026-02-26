@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - TaskMaster Pro</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="form-container">
-        <h1>Registro</h1>
+        <!-- Nombre de la empresa como logo -->
+        <div class="form-title">TaskMaster <span class="pro">Pro</span></div>
 
         {% if message %}
         <div class="message {{ 'error' if error else 'success' }}">
@@ -20,6 +22,10 @@
             <input type="text" name="nombre" placeholder="Nombre completo" required>
             <input type="email" name="email" placeholder="Correo electrónico" required>
             <input type="password" name="password" placeholder="Contraseña" required>
+            <select name="rol" required>
+                <option value="trabajador" selected>Trabajador</option>
+                <option value="administrador">Administrador</option>
+            </select>
             <button type="submit">Registrarse</button>
         </form>
 
