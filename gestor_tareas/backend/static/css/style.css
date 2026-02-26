@@ -1,0 +1,113 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f5f5f5; /* fondo gris suave */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Contenedor del formulario */
+.form-container {
+    background-color: #ffffff; /* blanco elegante */
+    padding: 40px 35px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    width: 360px;
+    max-width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Título */
+h1 {
+    font-size: 26px;
+    color: #333333;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* Inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 18px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    font-size: 15px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus {
+    border-color: #2a3f54; /* azul oscuro formal */
+    box-shadow: 0 0 5px rgba(42,63,84,0.3);
+    outline: none;
+}
+
+/* Botón */
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #2a3f54; /* azul oscuro formal */
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 5px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #1f2d3a; /* azul más oscuro al pasar el mouse */
+}
+
+/* Mensajes de error o éxito */
+.message {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 15px;
+    padding: 8px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+/* Links */
+p {
+    font-size: 14px;
+    color: #555555;
+    margin-top: 15px;
+    text-align: center;
+}
+
+a {
+    color: #2a3f54;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
