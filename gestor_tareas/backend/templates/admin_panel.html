@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Panel Administrador</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="panel-container">
+
+<h1>Panel Administrador</h1>
+<p>Bienvenida {{ nombre }}</p>
+
+<div class="panel-menu">
+
+<a href="/admin/usuarios" class="panel-btn">
+Usuarios
+</a>
+
+<a href="/admin/tareas" class="panel-btn">
+Tareas
+</a>
+
+<a href="/logout" class="panel-btn logout">
+Cerrar sesión
+</a>
+
+</div>
+
+</div>
+
+</body>
+</html>

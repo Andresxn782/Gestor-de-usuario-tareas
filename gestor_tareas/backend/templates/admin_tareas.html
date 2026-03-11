@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>Panel Administrador</title>
+<title>Gestión de Tareas</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
@@ -10,7 +10,7 @@
 
 <div class="panel-container">
 
-<h1>Bienvenido, {{ nombre }}</h1>
+<h1>Gestión de Tareas</h1>
 
 <div class="panel-menu">
 
@@ -22,24 +22,24 @@
 
 </div>
 
-<h2>Lista de Trabajadores</h2>
+<h2>Lista de tareas</h2>
 
 <table>
 
 <tr>
 <th>ID</th>
 <th>Nombre</th>
-<th>Email</th>
-<th>Rol</th>
+<th>Descripción</th>
+<th>Estado</th>
 </tr>
 
-{% for usuario in usuarios %}
+{% for tarea in tareas %}
 
 <tr>
-<td>{{ usuario.id_usuario }}</td>
-<td>{{ usuario.nombre }}</td>
-<td>{{ usuario.email }}</td>
-<td>{{ usuario.rol }}</td>
+<td>{{ tarea.id_tarea }}</td>
+<td>{{ tarea.nombre }}</td>
+<td>{{ tarea.descripcion }}</td>
+<td>{{ tarea.estado }}</td>
 </tr>
 
 {% endfor %}
