@@ -22,6 +22,19 @@
 
 </div>
 
+<!-- BOTONES DE ACCIÓN -->
+<div class="tareas-botones">
+
+<a href="/admin/crear_tarea" class="panel-btn">
++ Tarea individual
+</a>
+
+<a href="/admin/crear_tarea_grupal" class="panel-btn">
++ Tarea grupal
+</a>
+
+</div>
+
 <h2>Lista de tareas</h2>
 
 <table>
@@ -31,6 +44,7 @@
 <th>Nombre</th>
 <th>Descripción</th>
 <th>Estado</th>
+<th>Trabajador</th>
 </tr>
 
 {% for tarea in tareas %}
@@ -39,7 +53,15 @@
 <td>{{ tarea.id_tarea }}</td>
 <td>{{ tarea.nombre }}</td>
 <td>{{ tarea.descripcion }}</td>
-<td>{{ tarea.estado }}</td>
+
+<td class="estado-{{ tarea.estado }}">
+{{ tarea.estado }}
+</td>
+
+<td>
+{{ tarea.trabajadores }}
+</td>
+
 </tr>
 
 {% endfor %}

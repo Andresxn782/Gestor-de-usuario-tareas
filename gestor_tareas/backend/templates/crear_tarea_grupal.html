@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Tarea grupal</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="panel-container">
+
+<h1>Crear tarea grupal</h1>
+
+<form method="POST">
+
+<div class="form-section">
+
+<h2>Información de la tarea</h2>
+
+<input type="text" name="nombre" placeholder="Nombre de la tarea" required>
+
+<textarea name="descripcion" placeholder="Descripción" required></textarea>
+
+</div>
+
+<div class="form-section">
+
+<h2>Seleccionar trabajadores</h2>
+
+<div class="checkbox-group">
+
+{% for usuario in usuarios %}
+
+<label class="checkbox-item">
+<input type="checkbox" name="usuarios" value="{{ usuario.id_usuario }}">
+{{ usuario.nombre }}
+</label>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+<button type="submit">Crear tarea grupal</button>
+
+</form>
+
+<br>
+
+<a href="/admin/tareas" class="panel-btn">Volver</a>
+
+</div>
+
+</body>
+</html>

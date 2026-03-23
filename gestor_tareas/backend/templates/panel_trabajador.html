@@ -4,43 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Trabajador - TaskMaster <span style="color:#f4c542;">Pro</span></title>
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <div class="panel-container">
-        <h1>Bienvenido, {{ nombre }}</h1>
-        <h2>Mis Tareas</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Tarea</th>
-                    <th>Descripción</th>
-                    <th>Estado</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for tarea in tareas %}
-                <tr>
-                    <td>{{ tarea.id_tarea }}</td>
-                    <td>{{ tarea.nombre }}</td>
-                    <td>{{ tarea.descripcion }}</td>
-                    <td>
-                        <form method="POST" action="/update_tarea">
-                            <input type="hidden" name="id_tarea" value="{{ tarea.id_tarea }}">
-                            <select name="estado" onchange="this.form.submit()">
-                                <option value="pendiente" {% if tarea.estado=='pendiente' %}selected{% endif %}>Pendiente</option>
-                                <option value="en_proceso" {% if tarea.estado=='en_proceso' %}selected{% endif %}>En proceso</option>
-                                <option value="finalizada" {% if tarea.estado=='finalizada' %}selected{% endif %}>Finalizada</option>
-                            </select>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <a href="{{ url_for('login') }}" class="btn-logout">Cerrar sesión</a>
-    </div>
+
+<div class="panel-container">
+
+    <h1>Bienvenido, {{ nombre }}</h1>
+
+    <h2>Mis Tareas</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tarea</th>
+                <th>Descripción</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for tarea in tareas %}
+            <tr>
+
+                <td>{{ tarea.id_tarea }}</td>
+                <td>{{ tarea.nombre }}</td>
+                <td>{{ tarea.descripcion }}</td>
+
+                <!-- ESTADO CON FORMULARIO -->
+                <td class="estado-{{ tarea.estado }}">
+
+                    <form method="POST" action="/actualizar_estado">
+
+                        <input type="hidden" name="id_tarea" value="{{ tarea.id_tarea }}">
+
+                        <select name="estado" onchange="this.form.submit()">
+
+                            <option value="pendiente" {% if tarea.estado == 'pendiente' %}selected{% endif %}>
+                                Pendiente
+                            </option>
+
+                            <option value="en_proceso" {% if tarea.estado == 'en proceso' %}selected{% endif %}>
+                                En proceso
+                            </option>
+
+                            <option value="finalizada" {% if tarea.estado == 'finalizada' %}selected{% endif %}>
+                                Finalizada
+                            </option>
+
+                        </select>
+
+                    </form>
+
+                </td>
+
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+
+    <br>
+
+    <a href="{{ url_for('login') }}" class="btn-logout">
+        Cerrar sesión
+    </a>
+
+</div>
+
 </body>
 </html>
