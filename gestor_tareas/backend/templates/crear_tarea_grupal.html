@@ -2,31 +2,39 @@
 <html>
 
 <head>
-<title>Tarea grupal</title>
+<title>{{ textos().tarea_grupal }}</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
+{% set t = textos() %}
+
+<!-- BOTÓN IDIOMA -->
+<div class="idioma-switch">
+    <a href="/cambiar_idioma/es">ES</a> | 
+    <a href="/cambiar_idioma/en">EN</a>
+</div>
+
 <div class="panel-container">
 
-<h1>Crear tarea grupal</h1>
+<h1>{{ t.tarea_grupal }}</h1>
 
 <form method="POST">
 
 <div class="form-section">
 
-<h2>Información de la tarea</h2>
+<h2>{{ t.informacion_tarea }}</h2>
 
-<input type="text" name="nombre" placeholder="Nombre de la tarea" required>
+<input type="text" name="nombre" placeholder="{{ t.nombre_tarea }}" required>
 
-<textarea name="descripcion" placeholder="Descripción" required></textarea>
+<textarea name="descripcion" placeholder="{{ t.descripcion }}" required></textarea>
 
 </div>
 
 <div class="form-section">
 
-<h2>Seleccionar trabajadores</h2>
+<h2>{{ t.trabajadores }}</h2>
 
 <div class="checkbox-group">
 
@@ -43,13 +51,13 @@
 
 </div>
 
-<button type="submit">Crear tarea grupal</button>
+<button type="submit">{{ t.crear_tarea_grupal }}</button>
 
 </form>
 
 <br>
 
-<a href="/admin/tareas" class="panel-btn">Volver</a>
+<a href="/admin/tareas" class="panel-btn">{{ t.volver }}</a>
 
 </div>
 

@@ -421,3 +421,21 @@ margin-bottom:10px;
 font-size:28px;
 color:#2a3f54;
 }
+/* BOTÓN IDIOMA */
+.idioma-switch {
+    position: fixed;
+    top: 20px;
+    right: 30px;
+    z-index: 1000;
+    font-weight: 600;
+}
+
+.idioma-switch a {
+    color: #2a3f54;
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+.idioma-switch a:hover {
+    text-decoration: underline;
+}

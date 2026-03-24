@@ -6,36 +6,109 @@ app = Flask(__name__)
 app.secret_key = "clave_super_secreta"
 
 # -------------------------
-# TRADUCCIONES
+# TRADUCCIONES COMPLETAS
 # -------------------------
 
-def traducir(texto):
+def textos():
 
     idioma = session.get("idioma", "es")
 
     traducciones = {
-        "Bienvenido": {"en": "Welcome"},
-        "Mis Tareas": {"en": "My Tasks"},
-        "Cerrar sesión": {"en": "Logout"},
-        "Gestión de Tareas": {"en": "Task Management"},
-        "Crear tarea": {"en": "Create Task"},
-        "Pendiente": {"en": "Pending"},
-        "En proceso": {"en": "In Progress"},
-        "Finalizada": {"en": "Completed"},
-        "Tareas": {"en": "Tasks"},
-        "Descripción": {"en": "Description"},
-        "Estado": {"en": "Status"},
-        "Trabajadores": {"en": "Workers"}
+
+        "es": {
+            "bienvenido": "Bienvenido",
+            "mis_tareas": "Mis Tareas",
+            "cerrar_sesion": "Cerrar sesión",
+            "tareas": "Tareas",
+            "descripcion": "Descripción",
+            "estado": "Estado",
+            "trabajadores": "Trabajadores",
+            "pendiente": "Pendiente",
+            "en_proceso": "En proceso",
+            "finalizada": "Finalizada",
+            "crear_tarea": "Crear tarea",
+            "tarea_grupal": "Tarea grupal",
+            "login": "Iniciar sesión",
+            "email": "Correo electrónico",
+            "password": "Contraseña",
+            "no_cuenta": "¿No tienes cuenta?",
+            "registrarse": "Regístrate aquí",
+            "panel_admin": "Panel Administrador",
+            "bienvenido": "Bienvenido",
+            "usuarios": "Usuarios",
+            "tareas": "Tareas",
+            "cerrar_sesion": "Cerrar sesión",
+            "lista_trabajadores": "Lista de trabajadores",
+            "nombre": "Nombre",
+            "email": "Email",
+            "rol": "Rol",
+            "panel_trabajador": "Panel Trabajador",
+            "mis_tareas": "Mis Tareas",
+            "tarea": "Tarea",
+            "estado": "Estado",
+            "pendiente": "Pendiente",
+            "en_proceso": "En proceso",
+            "finalizada": "Finalizada",
+            "registro": "Registro",
+            "nombre_completo": "Nombre completo",
+            "trabajador": "Trabajador",
+            "administrador": "Administrador",
+            "ya_cuenta": "¿Ya tienes cuenta?",
+            "crear_tarea": "Crear tarea",
+            "volver": "Volver",
+
+        },
+
+        "en": {
+            "bienvenido": "Welcome",
+            "mis_tareas": "My Tasks",
+            "cerrar_sesion": "Logout",
+            "tareas": "Tasks",
+            "descripcion": "Description",
+            "estado": "Status",
+            "trabajadores": "Workers",
+            "pendiente": "Pending",
+            "en_proceso": "In Progress",
+            "finalizada": "Completed",
+            "crear_tarea": "Create Task",
+            "tarea_grupal": "Group Task",
+            "login": "Login",
+            "email": "Email",
+            "password": "Password",
+            "no_cuenta": "Don't have an account?",
+            "registrarse": "Sign up here",
+            "panel_admin": "Admin Panel",
+            "bienvenido": "Welcome",
+            "usuarios": "Users",
+            "tareas": "Tasks",
+            "cerrar_sesion": "Logout",
+            "lista_trabajadores": "Workers List",
+            "nombre": "Name",
+            "email": "Email",
+            "rol": "Role",
+            "panel_trabajador": "Worker Panel",
+            "mis_tareas": "My Tasks",
+            "tarea": "Task",
+            "estado": "Status",
+            "pendiente": "Pending",
+            "en_proceso": "In Progress",
+            "finalizada": "Completed",
+            "registro": "Register",
+            "nombre_completo": "Full name",
+            "trabajador": "Worker",
+            "administrador": "Administrator",
+            "ya_cuenta": "Already have an account?",
+            "crear_tarea": "Create task",
+            "volver": "Back",
+        }
+
     }
 
-    if idioma == "en" and texto in traducciones:
-        return traducciones[texto]["en"]
-
-    return texto
+    return traducciones.get(idioma, traducciones["es"])
 
 
 # hacer disponible en HTML
-app.jinja_env.globals.update(traducir=traducir)
+app.jinja_env.globals.update(textos=textos)
 
 
 # -------------------------

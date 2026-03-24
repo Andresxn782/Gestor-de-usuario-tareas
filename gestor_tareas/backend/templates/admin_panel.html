@@ -7,23 +7,32 @@
 
 <body>
 
+{% set t = textos() %}
+
+<!-- Botón idioma BIEN colocado -->
+<div class="idioma-switch">
+    <a href="/cambiar_idioma/es">ES</a> | 
+    <a href="/cambiar_idioma/en">EN</a>
+</div>
+
 <div class="panel-container">
 
-<h1>Panel Administrador</h1>
-<p>{{ traducir("Bienvenido") }}, {{ nombre }}</p>
+<h1>{{ t.tareas }} - Admin</h1>
+
+<p>{{ t.bienvenido }}, {{ nombre }}</p>
 
 <div class="panel-menu">
 
 <a href="/admin/usuarios" class="panel-btn">
-Usuarios
+{{ t.trabajadores }}
 </a>
 
 <a href="/admin/tareas" class="panel-btn">
-Tareas
+{{ t.tareas }}
 </a>
 
 <a href="/logout" class="panel-btn logout">
-Cerrar sesión
+{{ t.cerrar_sesion }}
 </a>
 
 </div>
@@ -31,8 +40,4 @@ Cerrar sesión
 </div>
 
 </body>
-<div class="idioma-switch">
-    <a href="/cambiar_idioma/es">ES</a> | 
-    <a href="/cambiar_idioma/en">EN</a>
-</div>
 </html>

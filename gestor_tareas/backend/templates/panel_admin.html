@@ -1,36 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ session.get('idioma', 'es') }}">
 
 <head>
-<title>Panel Administrador</title>
+<title>{{ textos().panel_admin }}</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
+{% set t = textos() %}
+
+<!-- BOTÓN IDIOMA -->
+<div class="idioma-switch">
+    <a href="/cambiar_idioma/es">ES</a> | 
+    <a href="/cambiar_idioma/en">EN</a>
+</div>
+
 <div class="panel-container">
 
-<h1>Bienvenido, {{ nombre }}</h1>
+<h1>{{ t.bienvenido }}, {{ nombre }}</h1>
 
 <div class="panel-menu">
 
-<a href="/panel" class="panel-btn">Usuarios</a>
+<a href="/panel" class="panel-btn">{{ t.usuarios }}</a>
 
-<a href="/admin/tareas" class="panel-btn">Tareas</a>
+<a href="/admin/tareas" class="panel-btn">{{ t.tareas }}</a>
 
-<a href="/logout" class="panel-btn logout">Cerrar sesión</a>
+<a href="/logout" class="panel-btn logout">{{ t.cerrar_sesion }}</a>
 
 </div>
 
-<h2>Lista de Trabajadores</h2>
+<h2>{{ t.lista_trabajadores }}</h2>
 
 <table>
 
 <tr>
 <th>ID</th>
-<th>Nombre</th>
-<th>Email</th>
-<th>Rol</th>
+<th>{{ t.nombre }}</th>
+<th>{{ t.email }}</th>
+<th>{{ t.rol }}</th>
 </tr>
 
 {% for usuario in usuarios %}
@@ -49,8 +57,4 @@
 </div>
 
 </body>
-<div class="idioma-switch">
-    <a href="/cambiar_idioma/es">ES</a> | 
-    <a href="/cambiar_idioma/en">EN</a>
-</div>
 </html>

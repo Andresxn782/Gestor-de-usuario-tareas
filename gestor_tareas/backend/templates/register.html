@@ -1,35 +1,60 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ session.get('idioma', 'es') }}">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro - TaskMaster Pro</title>
+    <title>{{ textos().registro }} - TaskMaster Pro</title>
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <div class="form-container">
-        <!-- Nombre de la empresa como logo -->
-        <div class="form-title">TaskMaster <span class="pro">Pro</span></div>
 
-        {% if message %}
-        <div class="message {{ 'error' if error else 'success' }}">
-            {{ message }}
-        </div>
-        {% endif %}
+{% set t = textos() %}
 
-        <form method="POST">
-            <input type="text" name="nombre" placeholder="Nombre completo" required>
-            <input type="email" name="email" placeholder="Correo electrónico" required>
-            <input type="password" name="password" placeholder="Contraseña" required>
-            <select name="rol" required>
-                <option value="trabajador" selected>Trabajador</option>
-                <option value="administrador">Administrador</option>
-            </select>
-            <button type="submit">Registrarse</button>
-        </form>
+<!-- BOTÓN IDIOMA -->
+<div class="idioma-switch">
+    <a href="/cambiar_idioma/es">ES</a> | 
+    <a href="/cambiar_idioma/en">EN</a>
+</div>
 
-        <p>¿Ya tienes cuenta? <a href="{{ url_for('login') }}">Inicia sesión aquí</a></p>
+<div class="form-container">
+
+    <!-- LOGO -->
+    <div class="form-title">TaskMaster <span class="pro">Pro</span></div>
+
+    {% if message %}
+    <div class="message {{ 'error' if error else 'success' }}">
+        {{ message }}
     </div>
+    {% endif %}
+
+    <form method="POST">
+
+        <input type="text" name="nombre" placeholder="{{ t.nombre_completo }}" required>
+
+        <input type="email" name="email" placeholder="{{ t.email }}" required>
+
+        <input type="password" name="password" placeholder="{{ t.password }}" required>
+
+        <select name="rol" required>
+            <option value="trabajador">{{ t.trabajador }}</option>
+            <option value="administrador">{{ t.administrador }}</option>
+        </select>
+
+        <button type="submit">{{ t.registrarse }}</button>
+
+    </form>
+
+    <p>
+        {{ t.ya_cuenta }}
+        <a href="{{ url_for('login') }}">{{ t.login }}</a>
+    </p>
+
+</div>
+
 </body>
 </html>

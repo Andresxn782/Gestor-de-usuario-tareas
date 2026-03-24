@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ session.get('idioma', 'es') }}">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Trabajador - TaskMaster <span style="color:#f4c542;">Pro</span></title>
+    <title>{{ textos().panel_trabajador }} - TaskMaster Pro</title>
     
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     
@@ -12,19 +13,27 @@
 
 <body>
 
+{% set t = textos() %}
+
+<!-- BOTÓN IDIOMA -->
+<div class="idioma-switch">
+    <a href="/cambiar_idioma/es">ES</a> | 
+    <a href="/cambiar_idioma/en">EN</a>
+</div>
+
 <div class="panel-container">
 
-    <h1>Bienvenido, {{ nombre }}</h1>
+    <h1>{{ t.bienvenido }}, {{ nombre }}</h1>
 
-    <h2>Mis Tareas</h2>
+    <h2>{{ t.mis_tareas }}</h2>
 
     <table>
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Tarea</th>
-                <th>Descripción</th>
-                <th>Estado</th>
+                <th>{{ t.tarea }}</th>
+                <th>{{ t.descripcion }}</th>
+                <th>{{ t.estado }}</th>
             </tr>
         </thead>
 
@@ -37,7 +46,7 @@
                 <td>{{ tarea.nombre }}</td>
                 <td>{{ tarea.descripcion }}</td>
 
-                <!-- ESTADO CON FORMULARIO -->
+                <!-- ESTADO -->
                 <td class="estado-{{ tarea.estado }}">
 
                     <form method="POST" action="/actualizar_estado">
@@ -47,15 +56,16 @@
                         <select name="estado" onchange="this.form.submit()">
 
                             <option value="pendiente" {% if tarea.estado == 'pendiente' %}selected{% endif %}>
-                                Pendiente
+                                {{ t.pendiente }}
                             </option>
 
-                            <option value="en_proceso" {% if tarea.estado == 'en proceso' %}selected{% endif %}>
-                                En proceso
+                            <!-- 🔥 CORRECCIÓN IMPORTANTE -->
+                            <option value="en_proceso" {% if tarea.estado == 'en_proceso' %}selected{% endif %}>
+                                {{ t.en_proceso }}
                             </option>
 
                             <option value="finalizada" {% if tarea.estado == 'finalizada' %}selected{% endif %}>
-                                Finalizada
+                                {{ t.finalizada }}
                             </option>
 
                         </select>
@@ -72,15 +82,11 @@
 
     <br>
 
-    <a href="{{ url_for('login') }}" class="btn-logout">
-        Cerrar sesión
+    <a href="/logout" class="btn-logout">
+        {{ t.cerrar_sesion }}
     </a>
 
 </div>
 
 </body>
-<div class="idioma-switch">
-    <a href="/cambiar_idioma/es">ES</a> | 
-    <a href="/cambiar_idioma/en">EN</a>
-</div>
 </html>

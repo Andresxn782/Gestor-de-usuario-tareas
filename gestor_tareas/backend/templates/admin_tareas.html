@@ -2,23 +2,37 @@
 <html>
 
 <head>
-<title>Gestión de Tareas</title>
+<title>{{ textos().tareas }}</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
+{% set t = textos() %}
+
+<!-- BOTÓN IDIOMA BIEN PUESTO -->
+<div class="idioma-switch">
+    <a href="/cambiar_idioma/es">ES</a> | 
+    <a href="/cambiar_idioma/en">EN</a>
+</div>
+
 <div class="panel-container">
 
-<h1>Gestión de Tareas</h1>
+<h1>{{ t.tareas }}</h1>
 
 <div class="panel-menu">
 
-<a href="/panel" class="panel-btn">Usuarios</a>
+<a href="/panel" class="panel-btn">
+{{ t.trabajadores }}
+</a>
 
-<a href="/admin/tareas" class="panel-btn">Tareas</a>
+<a href="/admin/tareas" class="panel-btn">
+{{ t.tareas }}
+</a>
 
-<a href="/logout" class="panel-btn logout">Cerrar sesión</a>
+<a href="/logout" class="panel-btn logout">
+{{ t.cerrar_sesion }}
+</a>
 
 </div>
 
@@ -26,31 +40,32 @@
 <div class="tareas-botones">
 
 <a href="/admin/crear_tarea" class="panel-btn">
-+ Tarea individual
++ {{ t.crear_tarea }}
 </a>
 
 <a href="/admin/crear_tarea_grupal" class="panel-btn">
-+ Tarea grupal
++ {{ t.tarea_grupal }}
 </a>
 
 </div>
 
-<h2>Lista de tareas</h2>
+<h2>{{ t.tareas }}</h2>
 
+<!-- ESTADÍSTICAS -->
 <div class="stats-container">
 
 <div class="stat-box">
-<p>Pendientes</p>
+<p>{{ t.pendiente }}</p>
 <h2>{{ pendientes }}</h2>
 </div>
 
 <div class="stat-box">
-<p>En proceso</p>
+<p>{{ t.en_proceso }}</p>
 <h2>{{ en_proceso }}</h2>
 </div>
 
 <div class="stat-box">
-<p>Finalizadas</p>
+<p>{{ t.finalizada }}</p>
 <h2>{{ finalizadas }}</h2>
 </div>
 
@@ -60,10 +75,10 @@
 
 <tr>
 <th>ID</th>
-<th>Nombre</th>
-<th>Descripción</th>
-<th>Estado</th>
-<th>Trabajador</th>
+<th>{{ t.tareas }}</th>
+<th>{{ t.descripcion }}</th>
+<th>{{ t.estado }}</th>
+<th>{{ t.trabajadores }}</th>
 </tr>
 
 {% for tarea in tareas %}
@@ -74,7 +89,13 @@
 <td>{{ tarea.descripcion }}</td>
 
 <td class="estado-{{ tarea.estado }}">
-{{ tarea.estado }}
+    {% if tarea.estado == 'pendiente' %}
+        {{ t.pendiente }}
+    {% elif tarea.estado == 'en_proceso' %}
+        {{ t.en_proceso }}
+    {% elif tarea.estado == 'finalizada' %}
+        {{ t.finalizada }}
+    {% endif %}
 </td>
 
 <td>
@@ -90,8 +111,4 @@
 </div>
 
 </body>
-<div class="idioma-switch">
-    <a href="/cambiar_idioma/es">ES</a> | 
-    <a href="/cambiar_idioma/en">EN</a>
-</div>
 </html>
