@@ -1,65 +1,73 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
+  <head>
+    <!-- Título de la página dinámico según traducción -->
+    <title>{{ textos().tarea_grupal }}</title>
+    <!-- Hoja de estilos principal -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
 
-<head>
-<title>{{ textos().tarea_grupal }}</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
+  <body>
+    {% set t = textos() %}
+    <!-- Guardar traducciones en variable 't' para uso más cómodo -->
 
-<body>
+    <!-- BOTÓN CAMBIO DE IDIOMA -->
+    <div class="idioma-switch">
+      <a href="/cambiar_idioma/es">ES</a> |
+      <!-- Cambiar idioma a español -->
+      <a href="/cambiar_idioma/en">EN</a>
+      <!-- Cambiar idioma a inglés -->
+    </div>
 
-{% set t = textos() %}
+    <div class="panel-container">
+      <!-- Contenedor principal del panel -->
 
-<!-- BOTÓN IDIOMA -->
-<div class="idioma-switch">
-    <a href="/cambiar_idioma/es">ES</a> | 
-    <a href="/cambiar_idioma/en">EN</a>
-</div>
+      <!-- Título de la sección -->
+      <h1>{{ t.tarea_grupal }}</h1>
 
-<div class="panel-container">
+      <!-- FORMULARIO CREAR TAREA GRUPAL -->
+      <form method="POST">
+        <div class="form-section">
+          <!-- Sección de información de la tarea -->
 
-<h1>{{ t.tarea_grupal }}</h1>
+          <h2>{{ t.informacion_tarea }}</h2>
 
-<form method="POST">
+          <!-- Campo nombre de la tarea -->
+          <input type="text" name="nombre" placeholder="{{ t.nombre_tarea }}" required />
 
-<div class="form-section">
+          <!-- Campo descripción de la tarea -->
+          <textarea name="descripcion" placeholder="{{ t.descripcion }}" required></textarea>
+        </div>
 
-<h2>{{ t.informacion_tarea }}</h2>
+        <div class="form-section">
+          <!-- Sección de selección de trabajadores -->
 
-<input type="text" name="nombre" placeholder="{{ t.nombre_tarea }}" required>
+          <h2>{{ t.trabajadores }}</h2>
 
-<textarea name="descripcion" placeholder="{{ t.descripcion }}" required></textarea>
+          <div class="checkbox-group">
+            <!-- Grupo de checkboxes -->
 
-</div>
+            <!-- Iterar sobre todos los usuarios disponibles -->
+            {% for usuario in usuarios %}
+            <label class="checkbox-item">
+              <input type="checkbox" name="usuarios" value="{{ usuario.id_usuario }}" />
+              <!-- Checkbox por usuario -->
+              {{ usuario.nombre }}
+              <!-- Mostrar nombre del trabajador -->
+            </label>
+            {% endfor %}
+          </div>
+        </div>
 
-<div class="form-section">
+        <!-- Botón para enviar el formulario y crear la tarea grupal -->
+        <button type="submit">{{ t.crear_tarea_grupal }}</button>
+      </form>
 
-<h2>{{ t.trabajadores }}</h2>
+      <br />
 
-<div class="checkbox-group">
-
-{% for usuario in usuarios %}
-
-<label class="checkbox-item">
-<input type="checkbox" name="usuarios" value="{{ usuario.id_usuario }}">
-{{ usuario.nombre }}
-</label>
-
-{% endfor %}
-
-</div>
-
-</div>
-
-<button type="submit">{{ t.crear_tarea_grupal }}</button>
-
-</form>
-
-<br>
-
-<a href="/admin/tareas" class="panel-btn">{{ t.volver }}</a>
-
-</div>
-
-</body>
+      <!-- Botón para volver a la lista de tareas -->
+      <a href="/admin/tareas" class="panel-btn">{{ t.volver }}</a>
+    </div>
+    <!-- Cierre panel-container -->
+  </body>
 </html>

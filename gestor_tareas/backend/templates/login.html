@@ -1,45 +1,62 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="{{ session.get('idioma', 'es') }}">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Idioma de la página según la sesión, por defecto español -->
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Codificación de caracteres -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Responsive design -->
     <title>{{ textos().login }} - TaskMaster Pro</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
+    <!-- Título dinámico según idioma -->
+    <!-- Hoja de estilos principal -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <!-- Fuente Poppins desde Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    {% set t = textos() %}
+    <!-- Guardar traducciones en variable 't' para uso más cómodo -->
 
-{% set t = textos() %}
-
-<!-- BOTÓN IDIOMA -->
-<div class="idioma-switch">
-    <a href="/cambiar_idioma/es">ES</a> | 
-    <a href="/cambiar_idioma/en">EN</a>
-</div>
-
-<div class="form-container">
-
-    <!-- LOGO -->
-    <div class="form-title">TaskMaster <span class="pro">Pro</span></div>
-
-    {% if message %}
-    <div class="message {{ 'error' if error else 'success' }}">
-        {{ message }}
+    <!-- BOTÓN CAMBIO DE IDIOMA -->
+    <div class="idioma-switch">
+      <a href="/cambiar_idioma/es">ES</a> |
+      <!-- Cambiar idioma a español -->
+      <a href="/cambiar_idioma/en">EN</a>
+      <!-- Cambiar idioma a inglés -->
     </div>
-    {% endif %}
 
-    <form method="POST">
-        <input type="email" name="email" placeholder="{{ t.email }}" required>
-        <input type="password" name="password" placeholder="{{ t.password }}" required>
+    <div class="form-container">
+      <!-- Contenedor principal del formulario -->
+
+      <!-- LOGO / título de la app -->
+      <div class="form-title">TaskMaster <span class="pro">Pro</span></div>
+
+      <!-- Mostrar mensajes dinámicos (error o éxito) si existen -->
+      {% if message %}
+      <div class="message {{ 'error' if error else 'success' }}">{{ message }}</div>
+      {% endif %}
+
+      <!-- FORMULARIO LOGIN -->
+      <form method="POST">
+        <!-- Enviar datos por POST -->
+        <input type="email" name="email" placeholder="{{ t.email }}" required />
+        <!-- Campo email con traducción -->
+        <input type="password" name="password" placeholder="{{ t.password }}" required />
+        <!-- Campo contraseña con traducción -->
         <button type="submit">{{ t.login }}</button>
-    </form>
+        <!-- Botón enviar con traducción -->
+      </form>
 
-    <p>
+      <!-- Enlace a registro si no se tiene cuenta -->
+      <p>
         {{ t.no_cuenta }}
         <a href="{{ url_for('register') }}">{{ t.registrarse }}</a>
-    </p>
-
-</div>
-
-</body>
+        <!-- Redirige a la página de registro -->
+      </p>
+    </div>
+    <!-- Cierre form-container -->
+  </body>
 </html>

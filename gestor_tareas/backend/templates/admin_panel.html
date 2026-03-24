@@ -1,43 +1,47 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Panel Administrador</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
+    <!-- Título de la página -->
+    <!-- Hoja de estilos principal -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
 
-<body>
+  <body>
+    {% set t = textos() %}
+    <!-- Guardar traducciones en variable 't' para uso más cómodo -->
 
-{% set t = textos() %}
+    <!-- BOTÓN CAMBIO DE IDIOMA -->
+    <div class="idioma-switch">
+      <a href="/cambiar_idioma/es">ES</a> |
+      <!-- Cambiar idioma a español -->
+      <a href="/cambiar_idioma/en">EN</a>
+      <!-- Cambiar idioma a inglés -->
+    </div>
 
-<!-- Botón idioma BIEN colocado -->
-<div class="idioma-switch">
-    <a href="/cambiar_idioma/es">ES</a> | 
-    <a href="/cambiar_idioma/en">EN</a>
-</div>
+    <div class="panel-container">
+      <!-- Contenedor principal del panel -->
 
-<div class="panel-container">
+      <!-- Título del panel con traducción -->
+      <h1>{{ t.tareas }} - Admin</h1>
 
-<h1>{{ t.tareas }} - Admin</h1>
+      <!-- Mensaje de bienvenida con el nombre del usuario -->
+      <p>{{ t.bienvenido }}, {{ nombre }}</p>
 
-<p>{{ t.bienvenido }}, {{ nombre }}</p>
+      <div class="panel-menu">
+        <!-- Menú de navegación del panel -->
 
-<div class="panel-menu">
+        <!-- Enlace a la lista de trabajadores -->
+        <a href="/admin/usuarios" class="panel-btn"> {{ t.trabajadores }} </a>
 
-<a href="/admin/usuarios" class="panel-btn">
-{{ t.trabajadores }}
-</a>
+        <!-- Enlace a la gestión de tareas -->
+        <a href="/admin/tareas" class="panel-btn"> {{ t.tareas }} </a>
 
-<a href="/admin/tareas" class="panel-btn">
-{{ t.tareas }}
-</a>
-
-<a href="/logout" class="panel-btn logout">
-{{ t.cerrar_sesion }}
-</a>
-
-</div>
-
-</div>
-
-</body>
+        <!-- Enlace para cerrar sesión -->
+        <a href="/logout" class="panel-btn logout"> {{ t.cerrar_sesion }} </a>
+      </div>
+      <!-- Cierre panel-menu -->
+    </div>
+    <!-- Cierre panel-container -->
+  </body>
 </html>

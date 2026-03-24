@@ -1,92 +1,128 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="{{ session.get('idioma', 'es') }}">
+  <!-- Idioma de la página según la sesión, por defecto español -->
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Codificación de caracteres -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Responsive design -->
     <title>{{ textos().panel_trabajador }} - TaskMaster Pro</title>
-    
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
+    <!-- Título dinámico según traducción -->
 
-<body>
+    <!-- Hoja de estilos principal -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 
-{% set t = textos() %}
+    <!-- Fuente Poppins desde Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-<!-- BOTÓN IDIOMA -->
-<div class="idioma-switch">
-    <a href="/cambiar_idioma/es">ES</a> | 
-    <a href="/cambiar_idioma/en">EN</a>
-</div>
+  <body>
+    {% set t = textos() %}
+    <!-- Guardar traducciones en variable 't' para uso más cómodo -->
 
-<div class="panel-container">
+    <!-- BOTÓN CAMBIO DE IDIOMA -->
+    <div class="idioma-switch">
+      <a href="/cambiar_idioma/es">ES</a> |
+      <!-- Cambiar idioma a español -->
+      <a href="/cambiar_idioma/en">EN</a>
+      <!-- Cambiar idioma a inglés -->
+    </div>
 
-    <h1>{{ t.bienvenido }}, {{ nombre }}</h1>
+    <div class="panel-container">
+      <!-- Contenedor principal del panel -->
 
-    <h2>{{ t.mis_tareas }}</h2>
+      <!-- Mensaje de bienvenida con nombre del usuario -->
+      <h1>{{ t.bienvenido }}, {{ nombre }}</h1>
 
-    <table>
+      <!-- Subtítulo sección de mis tareas -->
+      <h2>{{ t.mis_tareas }}</h2>
+
+      <!-- TABLA DE TAREAS DEL TRABAJADOR -->
+      <table>
         <thead>
-            <tr>
-                <th>ID</th>
-                <th>{{ t.tarea }}</th>
-                <th>{{ t.descripcion }}</th>
-                <th>{{ t.estado }}</th>
-            </tr>
+          <tr>
+            <th>ID</th>
+            <th>{{ t.tarea }}</th>
+            <th>{{ t.descripcion }}</th>
+            <th>{{ t.estado }}</th>
+          </tr>
         </thead>
 
         <tbody>
+          <!-- Iterar sobre todas las tareas asignadas al trabajador -->
+          {% for tarea in tareas %}
+          <tr>
+            <td>{{ tarea.id_tarea }}</td>
+            <td>{{ tarea.nombre }}</td>
+            <td>{{ tarea.descripcion }}</td>
 
-            {% for tarea in tareas %}
-            <tr>
+            <!-- ESTADO DE LA TAREA -->
+            <td class="estado-{{ tarea.estado }}">
+              <!-- Clase dinámica según estado para CSS -->
 
-                <td>{{ tarea.id_tarea }}</td>
-                <td>{{ tarea.nombre }}</td>
-                <td>{{ tarea.descripcion }}</td>
+              <!-- FORMULARIO PARA CAMBIAR ESTADO -->
+              <form method="POST" action="/actualizar_estado">
+                <!-- ID de la tarea oculto -->
+                <input type="hidden" name="id_tarea" value="{{ tarea.id_tarea }}" />
 
-                <!-- ESTADO -->
-                <td class="estado-{{ tarea.estado }}">
+                <!-- Dropdown para cambiar el estado -->
+                <select name="estado" onchange="this.form.submit()">
+                  <!-- Envía el formulario al cambiar -->
+                  <option
+                    value="pendiente"
+                    {%
+                    if
+                    tarea.estado=""
+                    ="pendiente"
+                    %}selected{%
+                    endif
+                    %}
+                  >
+                    {{ t.pendiente }}
+                  </option>
 
-                    <form method="POST" action="/actualizar_estado">
+                  <option
+                    value="en_proceso"
+                    {%
+                    if
+                    tarea.estado=""
+                    ="en_proceso"
+                    %}selected{%
+                    endif
+                    %}
+                  >
+                    {{ t.en_proceso }}
+                  </option>
 
-                        <input type="hidden" name="id_tarea" value="{{ tarea.id_tarea }}">
-
-                        <select name="estado" onchange="this.form.submit()">
-
-                            <option value="pendiente" {% if tarea.estado == 'pendiente' %}selected{% endif %}>
-                                {{ t.pendiente }}
-                            </option>
-
-                            <!-- 🔥 CORRECCIÓN IMPORTANTE -->
-                            <option value="en_proceso" {% if tarea.estado == 'en_proceso' %}selected{% endif %}>
-                                {{ t.en_proceso }}
-                            </option>
-
-                            <option value="finalizada" {% if tarea.estado == 'finalizada' %}selected{% endif %}>
-                                {{ t.finalizada }}
-                            </option>
-
-                        </select>
-
-                    </form>
-
-                </td>
-
-            </tr>
-            {% endfor %}
-
+                  <option
+                    value="finalizada"
+                    {%
+                    if
+                    tarea.estado=""
+                    ="finalizada"
+                    %}selected{%
+                    endif
+                    %}
+                  >
+                    {{ t.finalizada }}
+                  </option>
+                </select>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
         </tbody>
-    </table>
+      </table>
 
-    <br>
+      <br />
 
-    <a href="/logout" class="btn-logout">
-        {{ t.cerrar_sesion }}
-    </a>
-
-</div>
-
-</body>
+      <!-- Botón cerrar sesión -->
+      <a href="/logout" class="btn-logout"> {{ t.cerrar_sesion }} </a>
+    </div>
+    <!-- Cierre panel-container -->
+  </body>
 </html>

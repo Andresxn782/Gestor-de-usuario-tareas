@@ -1,60 +1,67 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="{{ session.get('idioma', 'es') }}">
+  <!-- Idioma de la página según la sesión, por defecto español -->
 
-<head>
-<title>{{ textos().panel_admin }}</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
+  <head>
+    <!-- Título de la página dinámico según traducción -->
+    <title>{{ textos().panel_admin }}</title>
+    <!-- Hoja de estilos principal -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
 
-<body>
+  <body>
+    {% set t = textos() %}
+    <!-- Guardar traducciones en variable 't' para uso más cómodo -->
 
-{% set t = textos() %}
+    <!-- BOTÓN CAMBIO DE IDIOMA -->
+    <div class="idioma-switch">
+      <a href="/cambiar_idioma/es">ES</a> |
+      <!-- Cambiar idioma a español -->
+      <a href="/cambiar_idioma/en">EN</a>
+      <!-- Cambiar idioma a inglés -->
+    </div>
 
-<!-- BOTÓN IDIOMA -->
-<div class="idioma-switch">
-    <a href="/cambiar_idioma/es">ES</a> | 
-    <a href="/cambiar_idioma/en">EN</a>
-</div>
+    <div class="panel-container">
+      <!-- Contenedor principal del panel -->
 
-<div class="panel-container">
+      <!-- Mensaje de bienvenida con nombre del usuario -->
+      <h1>{{ t.bienvenido }}, {{ nombre }}</h1>
 
-<h1>{{ t.bienvenido }}, {{ nombre }}</h1>
+      <!-- Menú de navegación del panel -->
+      <div class="panel-menu">
+        <!-- Enlace a la lista de usuarios -->
+        <a href="/panel" class="panel-btn">{{ t.usuarios }}</a>
 
-<div class="panel-menu">
+        <!-- Enlace a la gestión de tareas -->
+        <a href="/admin/tareas" class="panel-btn">{{ t.tareas }}</a>
 
-<a href="/panel" class="panel-btn">{{ t.usuarios }}</a>
+        <!-- Enlace para cerrar sesión -->
+        <a href="/logout" class="panel-btn logout">{{ t.cerrar_sesion }}</a>
+      </div>
 
-<a href="/admin/tareas" class="panel-btn">{{ t.tareas }}</a>
+      <!-- Subtítulo de la sección de usuarios -->
+      <h2>{{ t.lista_trabajadores }}</h2>
 
-<a href="/logout" class="panel-btn logout">{{ t.cerrar_sesion }}</a>
+      <!-- TABLA DE USUARIOS -->
+      <table>
+        <tr>
+          <th>ID</th>
+          <th>{{ t.nombre }}</th>
+          <th>{{ t.email }}</th>
+          <th>{{ t.rol }}</th>
+        </tr>
 
-</div>
-
-<h2>{{ t.lista_trabajadores }}</h2>
-
-<table>
-
-<tr>
-<th>ID</th>
-<th>{{ t.nombre }}</th>
-<th>{{ t.email }}</th>
-<th>{{ t.rol }}</th>
-</tr>
-
-{% for usuario in usuarios %}
-
-<tr>
-<td>{{ usuario.id_usuario }}</td>
-<td>{{ usuario.nombre }}</td>
-<td>{{ usuario.email }}</td>
-<td>{{ usuario.rol }}</td>
-</tr>
-
-{% endfor %}
-
-</table>
-
-</div>
-
-</body>
+        <!-- Iterar sobre todos los usuarios -->
+        {% for usuario in usuarios %}
+        <tr>
+          <td>{{ usuario.id_usuario }}</td>
+          <td>{{ usuario.nombre }}</td>
+          <td>{{ usuario.email }}</td>
+          <td>{{ usuario.rol }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+    <!-- Cierre panel-container -->
+  </body>
 </html>

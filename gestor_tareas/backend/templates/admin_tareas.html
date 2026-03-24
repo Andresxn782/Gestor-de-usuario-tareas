@@ -1,114 +1,97 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
+  <head>
+    <!-- Título de la página dinámico según traducción -->
+    <title>{{ textos().tareas }}</title>
+    <!-- Hoja de estilos principal -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
 
-<head>
-<title>{{ textos().tareas }}</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
+  <body>
+    {% set t = textos() %}
+    <!-- Guardar traducciones en variable 't' para uso más cómodo -->
 
-<body>
+    <!-- BOTÓN CAMBIO DE IDIOMA -->
+    <div class="idioma-switch">
+      <a href="/cambiar_idioma/es">ES</a> |
+      <!-- Cambiar idioma a español -->
+      <a href="/cambiar_idioma/en">EN</a>
+      <!-- Cambiar idioma a inglés -->
+    </div>
 
-{% set t = textos() %}
+    <div class="panel-container">
+      <!-- Contenedor principal del panel -->
 
-<!-- BOTÓN IDIOMA BIEN PUESTO -->
-<div class="idioma-switch">
-    <a href="/cambiar_idioma/es">ES</a> | 
-    <a href="/cambiar_idioma/en">EN</a>
-</div>
+      <!-- Título de la sección -->
+      <h1>{{ t.tareas }}</h1>
 
-<div class="panel-container">
+      <!-- Menú de navegación del panel -->
+      <div class="panel-menu">
+        <a href="/panel" class="panel-btn"> {{ t.trabajadores }} </a>
+        <a href="/admin/tareas" class="panel-btn"> {{ t.tareas }} </a>
+        <a href="/logout" class="panel-btn logout"> {{ t.cerrar_sesion }} </a>
+      </div>
 
-<h1>{{ t.tareas }}</h1>
+      <!-- BOTONES DE ACCIÓN PARA CREAR TAREAS -->
+      <div class="tareas-botones">
+        <a href="/admin/crear_tarea" class="panel-btn"> + {{ t.crear_tarea }} </a>
+        <a href="/admin/crear_tarea_grupal" class="panel-btn"> + {{ t.tarea_grupal }} </a>
+      </div>
 
-<div class="panel-menu">
+      <!-- Subtítulo de la sección de tareas -->
+      <h2>{{ t.tareas }}</h2>
 
-<a href="/panel" class="panel-btn">
-{{ t.trabajadores }}
-</a>
+      <!-- ESTADÍSTICAS DE TAREAS -->
+      <div class="stats-container">
+        <!-- Tareas pendientes -->
+        <div class="stat-box">
+          <p>{{ t.pendiente }}</p>
+          <h2>{{ pendientes }}</h2>
+        </div>
 
-<a href="/admin/tareas" class="panel-btn">
-{{ t.tareas }}
-</a>
+        <!-- Tareas en proceso -->
+        <div class="stat-box">
+          <p>{{ t.en_proceso }}</p>
+          <h2>{{ en_proceso }}</h2>
+        </div>
 
-<a href="/logout" class="panel-btn logout">
-{{ t.cerrar_sesion }}
-</a>
+        <!-- Tareas finalizadas -->
+        <div class="stat-box">
+          <p>{{ t.finalizada }}</p>
+          <h2>{{ finalizadas }}</h2>
+        </div>
+      </div>
 
-</div>
+      <!-- TABLA DE TAREAS -->
+      <table>
+        <tr>
+          <th>ID</th>
+          <th>{{ t.tareas }}</th>
+          <th>{{ t.descripcion }}</th>
+          <th>{{ t.estado }}</th>
+          <th>{{ t.trabajadores }}</th>
+        </tr>
 
-<!-- BOTONES DE ACCIÓN -->
-<div class="tareas-botones">
+        <!-- Iterar sobre todas las tareas -->
+        {% for tarea in tareas %}
+        <tr>
+          <td>{{ tarea.id_tarea }}</td>
+          <td>{{ tarea.nombre }}</td>
+          <td>{{ tarea.descripcion }}</td>
 
-<a href="/admin/crear_tarea" class="panel-btn">
-+ {{ t.crear_tarea }}
-</a>
+          <!-- Estado de la tarea con clase dinámica según estado -->
+          <td class="estado-{{ tarea.estado }}">
+            {% if tarea.estado == 'pendiente' %} {{ t.pendiente }} {% elif tarea.estado ==
+            'en_proceso' %} {{ t.en_proceso }} {% elif tarea.estado == 'finalizada' %} {{
+            t.finalizada }} {% endif %}
+          </td>
 
-<a href="/admin/crear_tarea_grupal" class="panel-btn">
-+ {{ t.tarea_grupal }}
-</a>
-
-</div>
-
-<h2>{{ t.tareas }}</h2>
-
-<!-- ESTADÍSTICAS -->
-<div class="stats-container">
-
-<div class="stat-box">
-<p>{{ t.pendiente }}</p>
-<h2>{{ pendientes }}</h2>
-</div>
-
-<div class="stat-box">
-<p>{{ t.en_proceso }}</p>
-<h2>{{ en_proceso }}</h2>
-</div>
-
-<div class="stat-box">
-<p>{{ t.finalizada }}</p>
-<h2>{{ finalizadas }}</h2>
-</div>
-
-</div>
-
-<table>
-
-<tr>
-<th>ID</th>
-<th>{{ t.tareas }}</th>
-<th>{{ t.descripcion }}</th>
-<th>{{ t.estado }}</th>
-<th>{{ t.trabajadores }}</th>
-</tr>
-
-{% for tarea in tareas %}
-
-<tr>
-<td>{{ tarea.id_tarea }}</td>
-<td>{{ tarea.nombre }}</td>
-<td>{{ tarea.descripcion }}</td>
-
-<td class="estado-{{ tarea.estado }}">
-    {% if tarea.estado == 'pendiente' %}
-        {{ t.pendiente }}
-    {% elif tarea.estado == 'en_proceso' %}
-        {{ t.en_proceso }}
-    {% elif tarea.estado == 'finalizada' %}
-        {{ t.finalizada }}
-    {% endif %}
-</td>
-
-<td>
-{{ tarea.trabajadores }}
-</td>
-
-</tr>
-
-{% endfor %}
-
-</table>
-
-</div>
-
-</body>
+          <!-- Lista de trabajadores asignados a la tarea -->
+          <td>{{ tarea.trabajadores }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+    <!-- Cierre panel-container -->
+  </body>
 </html>

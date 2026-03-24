@@ -1,20 +1,24 @@
+# Importaciones necesarias para Flask y manejo de base de datos
 from flask import Flask, render_template, request, redirect, session
-import mysql.connector
-from werkzeug.security import generate_password_hash, check_password_hash
+import mysql.connector  # Para conectarse a MySQL
+from werkzeug.security import generate_password_hash, check_password_hash  # Para hashear y verificar contraseñas
 
+# Crear la aplicación Flask
 app = Flask(__name__)
+# Clave secreta usada para sesiones seguras
 app.secret_key = "clave_super_secreta"
 
 # -------------------------
 # TRADUCCIONES COMPLETAS
 # -------------------------
 
+# Función para manejar traducciones de la interfaz
 def textos():
-
+    # Obtener idioma de la sesión, por defecto español
     idioma = session.get("idioma", "es")
 
+    # Diccionario con traducciones en español e inglés
     traducciones = {
-
         "es": {
             "bienvenido": "Bienvenido",
             "mis_tareas": "Mis Tareas",
@@ -34,31 +38,19 @@ def textos():
             "no_cuenta": "¿No tienes cuenta?",
             "registrarse": "Regístrate aquí",
             "panel_admin": "Panel Administrador",
-            "bienvenido": "Bienvenido",
             "usuarios": "Usuarios",
-            "tareas": "Tareas",
-            "cerrar_sesion": "Cerrar sesión",
             "lista_trabajadores": "Lista de trabajadores",
             "nombre": "Nombre",
-            "email": "Email",
             "rol": "Rol",
             "panel_trabajador": "Panel Trabajador",
-            "mis_tareas": "Mis Tareas",
             "tarea": "Tarea",
-            "estado": "Estado",
-            "pendiente": "Pendiente",
-            "en_proceso": "En proceso",
-            "finalizada": "Finalizada",
             "registro": "Registro",
             "nombre_completo": "Nombre completo",
             "trabajador": "Trabajador",
             "administrador": "Administrador",
             "ya_cuenta": "¿Ya tienes cuenta?",
-            "crear_tarea": "Crear tarea",
             "volver": "Volver",
-
         },
-
         "en": {
             "bienvenido": "Welcome",
             "mis_tareas": "My Tasks",
@@ -78,43 +70,32 @@ def textos():
             "no_cuenta": "Don't have an account?",
             "registrarse": "Sign up here",
             "panel_admin": "Admin Panel",
-            "bienvenido": "Welcome",
             "usuarios": "Users",
-            "tareas": "Tasks",
-            "cerrar_sesion": "Logout",
             "lista_trabajadores": "Workers List",
             "nombre": "Name",
-            "email": "Email",
             "rol": "Role",
             "panel_trabajador": "Worker Panel",
-            "mis_tareas": "My Tasks",
             "tarea": "Task",
-            "estado": "Status",
-            "pendiente": "Pending",
-            "en_proceso": "In Progress",
-            "finalizada": "Completed",
             "registro": "Register",
             "nombre_completo": "Full name",
             "trabajador": "Worker",
             "administrador": "Administrator",
             "ya_cuenta": "Already have an account?",
-            "crear_tarea": "Create task",
             "volver": "Back",
         }
-
     }
 
+    # Devolver traducciones del idioma elegido, por defecto español
     return traducciones.get(idioma, traducciones["es"])
 
-
-# hacer disponible en HTML
+# Hacer la función de traducciones disponible en los templates HTML
 app.jinja_env.globals.update(textos=textos)
-
 
 # -------------------------
 # CONEXIÓN BD
 # -------------------------
 
+# Función para obtener la conexión a la base de datos
 def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
@@ -123,38 +104,39 @@ def get_db_connection():
         database="gestor_tareas"
     )
 
-
 # -------------------------
 # LOGIN
 # -------------------------
 
 @app.route("/", methods=["GET","POST"])
 def login():
-
+    # Si se envía el formulario
     if request.method == "POST":
-
-        email = request.form["email"]
-        password = request.form["password"]
+        email = request.form["email"]  # Obtener email del formulario
+        password = request.form["password"]  # Obtener contraseña del formulario
 
         conexion = get_db_connection()
         cursor = conexion.cursor(dictionary=True)
 
-        cursor.execute("SELECT * FROM usuarios WHERE email=%s",(email,))
+        # Buscar usuario por email
+        cursor.execute("SELECT * FROM usuarios WHERE email=%s", (email,))
         usuario = cursor.fetchone()
 
         cursor.close()
         conexion.close()
 
+        # Verificar que el usuario exista y la contraseña coincida
         if usuario and check_password_hash(usuario["password"], password):
-
+            # Guardar información del usuario en sesión
             session["usuario_id"] = usuario["id_usuario"]
             session["rol"] = usuario["rol"]
             session["nombre"] = usuario["nombre"]
 
+            # Redirigir al panel correspondiente
             return redirect("/panel")
 
+    # Si es GET o login fallido, mostrar el formulario
     return render_template("login.html")
-
 
 # -------------------------
 # REGISTRO
@@ -162,33 +144,33 @@ def login():
 
 @app.route("/register", methods=["GET","POST"])
 def register():
-
     if request.method == "POST":
-
         nombre = request.form["nombre"]
         email = request.form["email"]
         password = request.form["password"]
         rol = request.form["rol"]
 
+        # Hashear la contraseña antes de guardarla
         password_hash = generate_password_hash(password)
 
         conexion = get_db_connection()
         cursor = conexion.cursor()
 
+        # Insertar nuevo usuario
         cursor.execute("""
         INSERT INTO usuarios (nombre,email,password,rol)
         VALUES (%s,%s,%s,%s)
-        """,(nombre,email,password_hash,rol))
+        """, (nombre, email, password_hash, rol))
 
         conexion.commit()
-
         cursor.close()
         conexion.close()
 
+        # Redirigir al login
         return redirect("/")
 
+    # Mostrar formulario de registro
     return render_template("register.html")
-
 
 # -------------------------
 # PANEL
@@ -196,43 +178,42 @@ def register():
 
 @app.route("/panel")
 def panel():
-
+    # Si no hay usuario logueado, redirigir al login
     if "usuario_id" not in session:
         return redirect("/")
 
     conexion = get_db_connection()
     cursor = conexion.cursor(dictionary=True)
 
+    # Panel de administrador
     if session["rol"] == "administrador":
-
+        # Obtener lista de trabajadores
         cursor.execute("SELECT id_usuario,nombre,email,rol FROM usuarios WHERE rol='trabajador'")
         usuarios = cursor.fetchall()
-
         cursor.close()
         conexion.close()
 
+        # Renderizar panel admin
         return render_template("panel_admin.html",
                                usuarios=usuarios,
                                nombre=session["nombre"])
-
     else:
-
+        # Panel de trabajador: obtener sus tareas
         cursor.execute("""
         SELECT t.id_tarea,t.nombre,t.descripcion,t.estado
         FROM tareas t
         JOIN usuario_tarea ut ON t.id_tarea = ut.id_tarea
         WHERE ut.id_usuario = %s
-        """,(session["usuario_id"],))
+        """, (session["usuario_id"],))
 
         tareas = cursor.fetchall()
-
         cursor.close()
         conexion.close()
 
+        # Renderizar panel trabajador
         return render_template("panel_trabajador.html",
                                tareas=tareas,
                                nombre=session["nombre"])
-
 
 # -------------------------
 # PANEL TAREAS ADMIN
@@ -240,20 +221,20 @@ def panel():
 
 @app.route("/admin/tareas")
 def admin_tareas():
-
+    # Solo admin puede acceder
     if session.get("rol") != "administrador":
         return redirect("/")
 
     conexion = get_db_connection()
     cursor = conexion.cursor(dictionary=True)
 
-    # TAREAS
+    # Obtener todas las tareas con los trabajadores asignados
     cursor.execute("""
-    SELECT 
-        t.id_tarea, 
-        t.nombre, 
-        t.descripcion, 
-        t.estado, 
+    SELECT
+        t.id_tarea,
+        t.nombre,
+        t.descripcion,
+        t.estado,
         GROUP_CONCAT(u.nombre SEPARATOR ', ') AS trabajadores
     FROM tareas t
     JOIN usuario_tarea ut ON t.id_tarea = ut.id_tarea
@@ -262,7 +243,7 @@ def admin_tareas():
     """)
     tareas = cursor.fetchall()
 
-    # ESTADÍSTICAS
+    # Obtener estadísticas de estado de tareas
     cursor.execute("SELECT COUNT(*) AS total FROM tareas WHERE estado='pendiente'")
     pendientes = cursor.fetchone()["total"]
 
@@ -275,6 +256,7 @@ def admin_tareas():
     cursor.close()
     conexion.close()
 
+    # Renderizar vista de tareas admin
     return render_template(
         "admin_tareas.html",
         tareas=tareas,
@@ -282,13 +264,13 @@ def admin_tareas():
         en_proceso=en_proceso,
         finalizadas=finalizadas
     )
+
 # -------------------------
 # CREAR TAREA
 # -------------------------
 
 @app.route("/admin/crear_tarea", methods=["GET","POST"])
 def crear_tarea():
-
     if session.get("rol") != "administrador":
         return redirect("/")
 
@@ -296,46 +278,45 @@ def crear_tarea():
     cursor = conexion.cursor(dictionary=True)
 
     if request.method == "POST":
-
         nombre = request.form["nombre"]
         descripcion = request.form["descripcion"]
         usuario_id = request.form["usuario"]
 
-        # comprobar tarea activa
+        # Comprobar si el trabajador tiene una tarea activa
         cursor.execute("""
         SELECT *
         FROM tareas t
         JOIN usuario_tarea ut ON t.id_tarea = ut.id_tarea
         WHERE ut.id_usuario=%s
         AND t.estado!='finalizada'
-        """,(usuario_id,))
+        """, (usuario_id,))
 
         tarea_activa = cursor.fetchone()
 
         if tarea_activa:
             return "El trabajador ya tiene una tarea activa"
 
+        # Crear tarea nueva
         cursor.execute("""
         INSERT INTO tareas (nombre,descripcion,estado)
         VALUES (%s,%s,'pendiente')
-        """,(nombre,descripcion))
+        """, (nombre, descripcion))
 
         conexion.commit()
-
         id_tarea = cursor.lastrowid
 
+        # Asignar tarea al trabajador
         cursor.execute("""
         INSERT INTO usuario_tarea (id_usuario,id_tarea)
         VALUES (%s,%s)
-        """,(usuario_id,id_tarea))
+        """, (usuario_id, id_tarea))
 
         conexion.commit()
-
         return redirect("/admin/tareas")
 
+    # Obtener lista de trabajadores para el formulario
     cursor.execute("SELECT id_usuario,nombre FROM usuarios WHERE rol='trabajador'")
     usuarios = cursor.fetchall()
-
     cursor.close()
     conexion.close()
 
@@ -347,7 +328,6 @@ def crear_tarea():
 
 @app.route("/admin/crear_tarea_grupal", methods=["GET","POST"])
 def crear_tarea_grupal():
-
     if session.get("rol") != "administrador":
         return redirect("/")
 
@@ -355,15 +335,14 @@ def crear_tarea_grupal():
     cursor = conexion.cursor(dictionary=True)
 
     if request.method == "POST":
-
         nombre = request.form["nombre"]
         descripcion = request.form["descripcion"]
-        usuarios = request.form.getlist("usuarios")
+        usuarios = request.form.getlist("usuarios")  # Obtener lista de ids
 
         if not usuarios:
             return "Debes seleccionar al menos un trabajador"
 
-        # comprobar si alguno tiene tarea activa
+        # Comprobar si algún trabajador tiene tarea activa
         for usuario_id in usuarios:
             cursor.execute("""
             SELECT *
@@ -371,38 +350,35 @@ def crear_tarea_grupal():
             JOIN usuario_tarea ut ON t.id_tarea = ut.id_tarea
             WHERE ut.id_usuario=%s
             AND t.estado!='finalizada'
-            """,(usuario_id,))
+            """, (usuario_id,))
 
             if cursor.fetchone():
                 return "Uno de los trabajadores ya tiene una tarea activa"
 
-        # crear tarea
+        # Crear tarea grupal
         cursor.execute("""
         INSERT INTO tareas (nombre,descripcion,estado)
         VALUES (%s,%s,'pendiente')
-        """,(nombre,descripcion))
+        """, (nombre, descripcion))
 
         conexion.commit()
-
         id_tarea = cursor.lastrowid
 
-        # asignar a todos
+        # Asignar tarea a todos los trabajadores seleccionados
         for usuario_id in usuarios:
             cursor.execute("""
             INSERT INTO usuario_tarea (id_usuario,id_tarea)
             VALUES (%s,%s)
-            """,(usuario_id,id_tarea))
+            """, (usuario_id, id_tarea))
 
         conexion.commit()
-
         cursor.close()
         conexion.close()
-
         return redirect("/admin/tareas")
 
+    # Obtener lista de trabajadores
     cursor.execute("SELECT id_usuario,nombre FROM usuarios WHERE rol='trabajador'")
     usuarios = cursor.fetchall()
-
     cursor.close()
     conexion.close()
 
@@ -414,7 +390,6 @@ def crear_tarea_grupal():
 
 @app.route("/actualizar_estado", methods=["POST"])
 def actualizar_estado():
-
     if "usuario_id" not in session:
         return redirect("/")
 
@@ -424,6 +399,7 @@ def actualizar_estado():
     conexion = get_db_connection()
     cursor = conexion.cursor()
 
+    # Actualizar estado de tarea
     cursor.execute("""
     UPDATE tareas
     SET estado = %s
@@ -431,7 +407,6 @@ def actualizar_estado():
     """, (nuevo_estado, id_tarea))
 
     conexion.commit()
-
     cursor.close()
     conexion.close()
 
@@ -443,11 +418,9 @@ def actualizar_estado():
 
 @app.route("/logout")
 def logout():
-
-    session.clear()  # elimina la sesión
-
+    # Limpiar sesión
+    session.clear()
     return redirect("/")
-
 
 # -------------------------
 # CAMBIAR IDIOMA
@@ -455,10 +428,11 @@ def logout():
 
 @app.route("/cambiar_idioma/<idioma>")
 def cambiar_idioma(idioma):
-
+    # Guardar idioma en sesión
     session["idioma"] = idioma
-
+    # Redirigir a la página anterior
     return redirect(request.referrer or "/")
 
+# Ejecutar la app
 if __name__ == "__main__":
     app.run(debug=True)
