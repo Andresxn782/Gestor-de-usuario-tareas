@@ -10,7 +10,7 @@
 <div class="panel-container">
 
 <h1>Panel Administrador</h1>
-<p>Bienvenida {{ nombre }}</p>
+<p>{{ traducir("Bienvenido") }}, {{ nombre }}</p>
 
 <div class="panel-menu">
 
@@ -31,4 +31,8 @@ Cerrar sesión
 </div>
 
 </body>
+<div class="idioma-switch">
+    <a href="/cambiar_idioma/es">ES</a> | 
+    <a href="/cambiar_idioma/en">EN</a>
+</div>
 </html>

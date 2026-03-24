@@ -5,6 +5,38 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 app.secret_key = "clave_super_secreta"
 
+# -------------------------
+# TRADUCCIONES
+# -------------------------
+
+def traducir(texto):
+
+    idioma = session.get("idioma", "es")
+
+    traducciones = {
+        "Bienvenido": {"en": "Welcome"},
+        "Mis Tareas": {"en": "My Tasks"},
+        "Cerrar sesión": {"en": "Logout"},
+        "Gestión de Tareas": {"en": "Task Management"},
+        "Crear tarea": {"en": "Create Task"},
+        "Pendiente": {"en": "Pending"},
+        "En proceso": {"en": "In Progress"},
+        "Finalizada": {"en": "Completed"},
+        "Tareas": {"en": "Tasks"},
+        "Descripción": {"en": "Description"},
+        "Estado": {"en": "Status"},
+        "Trabajadores": {"en": "Workers"}
+    }
+
+    if idioma == "en" and texto in traducciones:
+        return traducciones[texto]["en"]
+
+    return texto
+
+
+# hacer disponible en HTML
+app.jinja_env.globals.update(traducir=traducir)
+
 
 # -------------------------
 # CONEXIÓN BD
@@ -142,6 +174,7 @@ def admin_tareas():
     conexion = get_db_connection()
     cursor = conexion.cursor(dictionary=True)
 
+    # TAREAS
     cursor.execute("""
     SELECT 
         t.id_tarea, 
@@ -154,13 +187,28 @@ def admin_tareas():
     JOIN usuarios u ON ut.id_usuario = u.id_usuario
     GROUP BY t.id_tarea
     """)
-
     tareas = cursor.fetchall()
+
+    # ESTADÍSTICAS
+    cursor.execute("SELECT COUNT(*) AS total FROM tareas WHERE estado='pendiente'")
+    pendientes = cursor.fetchone()["total"]
+
+    cursor.execute("SELECT COUNT(*) AS total FROM tareas WHERE estado='en_proceso'")
+    en_proceso = cursor.fetchone()["total"]
+
+    cursor.execute("SELECT COUNT(*) AS total FROM tareas WHERE estado='finalizada'")
+    finalizadas = cursor.fetchone()["total"]
 
     cursor.close()
     conexion.close()
 
-    return render_template("admin_tareas.html", tareas=tareas)
+    return render_template(
+        "admin_tareas.html",
+        tareas=tareas,
+        pendientes=pendientes,
+        en_proceso=en_proceso,
+        finalizadas=finalizadas
+    )
 # -------------------------
 # CREAR TAREA
 # -------------------------
@@ -326,6 +374,18 @@ def logout():
     session.clear()  # elimina la sesión
 
     return redirect("/")
+
+
+# -------------------------
+# CAMBIAR IDIOMA
+# -------------------------
+
+@app.route("/cambiar_idioma/<idioma>")
+def cambiar_idioma(idioma):
+
+    session["idioma"] = idioma
+
+    return redirect(request.referrer or "/")
 
 if __name__ == "__main__":
     app.run(debug=True)

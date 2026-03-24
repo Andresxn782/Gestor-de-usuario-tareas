@@ -37,6 +37,25 @@
 
 <h2>Lista de tareas</h2>
 
+<div class="stats-container">
+
+<div class="stat-box">
+<p>Pendientes</p>
+<h2>{{ pendientes }}</h2>
+</div>
+
+<div class="stat-box">
+<p>En proceso</p>
+<h2>{{ en_proceso }}</h2>
+</div>
+
+<div class="stat-box">
+<p>Finalizadas</p>
+<h2>{{ finalizadas }}</h2>
+</div>
+
+</div>
+
 <table>
 
 <tr>
@@ -71,4 +90,8 @@
 </div>
 
 </body>
+<div class="idioma-switch">
+    <a href="/cambiar_idioma/es">ES</a> | 
+    <a href="/cambiar_idioma/en">EN</a>
+</div>
 </html>
