@@ -145,18 +145,30 @@ def login():
 @app.route("/register", methods=["GET","POST"])
 def register():
     if request.method == "POST":
+
         nombre = request.form["nombre"]
         email = request.form["email"]
         password = request.form["password"]
         rol = request.form["rol"]
 
-        # Hashear la contraseña antes de guardarla
+        # VALIDACIÓN NOMBRE
+        if len(nombre) < 5 or len(nombre) > 20:
+            return render_template("register.html",
+                                   message="El nombre debe tener entre 5 y 20 caracteres",
+                                   error=True)
+
+        # VALIDACIÓN PASSWORD
+        if len(password) < 8 or len(password) > 16:
+            return render_template("register.html",
+                                   message="La contraseña debe tener entre 8 y 16 caracteres",
+                                   error=True)
+
+        # 🔥 ESTO VA FUERA DE LOS IF
         password_hash = generate_password_hash(password)
 
         conexion = get_db_connection()
         cursor = conexion.cursor()
 
-        # Insertar nuevo usuario
         cursor.execute("""
         INSERT INTO usuarios (nombre,email,password,rol)
         VALUES (%s,%s,%s,%s)
@@ -166,10 +178,8 @@ def register():
         cursor.close()
         conexion.close()
 
-        # Redirigir al login
         return redirect("/")
 
-    # Mostrar formulario de registro
     return render_template("register.html")
 
 # -------------------------
